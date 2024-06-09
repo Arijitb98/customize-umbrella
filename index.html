@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umbrella Customizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+			<div class="preview">
+				<img id="umbrella-image" src="assets/umbrellas/blue.png" alt="Umbrella">
+				<img id="logo-image" alt="Logo" class="hidden">
+				<div id="loader-container" class="loader-container">
+					<img id="loader" src="assets/icons/loader_icon.svg" alt="Loading" class="hidden">
+				</div>
+			</div>
+        <div class="sidebar">
+            <div class="header">
+                <h1>Custom Umbrella</h1>
+                <div class="color-switches">
+                    <button class="switch" style="background-color: #37B6E6;" onclick="changeColor(this, 'blue', '#37B6E6')"></button>
+                    <button class="switch" style="background-color: #B6146A;" onclick="changeColor(this, 'pink', '#B6146A')"></button>
+                    <button class="switch" style="background-color: #FED451;" onclick="changeColor(this, 'yellow', '#FED451')"></button>
+									</div>
+									<h3>Customize your umbrella</h3>
+									<p>Upload a logo for an instant preview.</p>
+										<p class="small-text">.png and .jpg files only. Max file size is 5MB.</p>
+									<div class="uploader">
+											<label for="logo-upload" class="upload-button" id="upload-button">
+													<img src="assets/icons/upload_icon.svg" alt="Upload Icon" class="upload-icon">
+													<div id="loader-container" class="loader-container">
+													<img id="spinner" src="assets/icons/loader_icon.svg" alt="Loading" class="hidden">
+													</div>
+													<span id="file-name">Upload Logo</span>
+													<button class="remove-button hidden" onclick="removeLogo()">X</button>
+											</label>
+											<input type="file" id="logo-upload" accept="image/*" onchange="uploadLogo(event)">
+									</div>
+							</div>
+					</div>
+			</div>
+			<script src="js/script.js"></script>
+			<script>
+				// Select blue color on initial load
+				changeColor(document.querySelector('.switch'), 'blue', '#37B6E6');
+			</script>
+	</body>
+	</html>
