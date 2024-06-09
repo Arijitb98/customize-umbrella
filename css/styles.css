@@ -201,9 +201,8 @@ body {
     z-index: 10;
 }
 
-.spinner {
-    height: 22px;
-    width: 24px;
+.spinner-icon {
+    filter: brightness(0) invert(1);
 }
 
 .upload-button {
