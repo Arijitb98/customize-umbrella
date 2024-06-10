@@ -52,24 +52,31 @@ function changeColor(element, selectedColor, selectedColorHex) {
 		// Setting the upload button color to the color being passed in selectedColorHex 
 		uploadButton.style.backgroundColor = selectedColorHex;
 
-		// Setting the background color based on selected color
-		let bgColor;
-		switch (selectedColor) {
-			case 'blue':
-				bgColor = '#e4f5fc';
-				break;
-			case 'yellow':
-				bgColor = '#fffaec';
-				break;
-			case 'pink':
-				bgColor = '#ffc0cb';
-				break;
-			default:
-				bgColor = '#f0f0f0';
-				break;
-		}
-		document.body.style.backgroundColor = bgColor;
+		// Lighten the selected color hex and set as the background color
+		const lightenedHexColor = lightenHexColor(selectedColorHex, 0.8); // .8 equals 80% lighter color
+		document.body.style.backgroundColor = lightenedHexColor;
 	}, 700);
+}
+
+// Function to lighten a hex color
+function lightenHexColor(hex, percent) {
+	// Remove the hash at the start of hex if present
+	hex = hex.replace(/^#/, '');
+
+	// Parsing the r, g, b values
+	let r = parseInt(hex.substring(0, 2), 16);
+	let g = parseInt(hex.substring(2, 4), 16);
+	let b = parseInt(hex.substring(4, 6), 16);
+
+	// Calculating the new r, g, b values
+	r = Math.min(255, Math.floor(r + (255 - r) * percent));
+	g = Math.min(255, Math.floor(g + (255 - g) * percent));
+	b = Math.min(255, Math.floor(b + (255 - b) * percent));
+
+	// Creating new hex
+	const newHex = `#${(r.toString(16).padStart(2, '0'))}${(g.toString(16).padStart(2, '0'))}${(b.toString(16).padStart(2, '0'))}`;
+
+	return newHex;
 }
 
 function checkImageExists(url, callback) {
@@ -80,118 +87,118 @@ function checkImageExists(url, callback) {
 }
 
 function uploadLogo(event) { // Selecting a file
-    const file = event.target.files[0];
-    const allowedTypes = ['image/jpeg', 'image/png'];
-    const maxSize = 5 * 1024 * 1024; // 5MB file size
-    const logoImage = document.getElementById("logo-image");
-    const loader = document.getElementById("loader");
+	const file = event.target.files[0];
+	const allowedTypes = ['image/jpeg', 'image/png'];
+	const maxSize = 5 * 1024 * 1024; // 5MB file size
+	const logoImage = document.getElementById("logo-image");
+	const loader = document.getElementById("loader");
 	const spinner = document.getElementById("spinner");
-    const umbrellaImage = document.getElementById("umbrella-image");
+	const umbrellaImage = document.getElementById("umbrella-image");
 	const uploadIcon = document.querySelector(".upload-icon");
 
 
-    if (file) {
-        if (!allowedTypes.includes(file.type)) {
-            alert("Please upload a PNG or JPG image file.");
-            return;
-        }
+	if (file) {
+		if (!allowedTypes.includes(file.type)) {
+			alert("Please upload a PNG or JPG image file.");
+			return;
+		}
 
-        if (file.size > maxSize) {
-            alert("File size exceeds the maximum limit of 5MB.");
-            return;
-        }
+		if (file.size > maxSize) {
+			alert("File size exceeds the maximum limit of 5MB.");
+			return;
+		}
 
-        // Show the loader, hide the logo and preview image
-        loader.style.display = "block";
+		// Show the loader, hide the logo and preview image
+		loader.style.display = "block";
 		spinner.style.display = "block";
 		uploadIcon.style.display = "none";
-        umbrellaImage.style.display = "none";
-        logoImage.style.display = "none";
+		umbrellaImage.style.display = "none";
+		logoImage.style.display = "none";
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            // Once image is loaded, make it visible
-            logoImage.src = e.target.result;
-            logoImage.classList.remove("hidden");
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			// Once image is loaded, make it visible
+			logoImage.src = e.target.result;
+			logoImage.classList.remove("hidden");
 
-            // Show the remove button
-            const removeButton = document.querySelector(".remove-button");
-            removeButton.classList.remove("hidden");
+			// Show the remove button
+			const removeButton = document.querySelector(".remove-button");
+			removeButton.classList.remove("hidden");
 
-            // Hide the loader, show the preview
-            loader.style.display = "none";
+			// Hide the loader, show the preview
+			loader.style.display = "none";
 			spinner.style.display = "none";
 			uploadIcon.style.display = "block";
-            umbrellaImage.style.display = "block";
-            logoImage.style.display = "block";
-        };
+			umbrellaImage.style.display = "block";
+			logoImage.style.display = "block";
+		};
 
-        // Reading the uploaded blob
-        setTimeout(() => {
-            reader.readAsDataURL(file);
-        }, 700);
+		// Reading the uploaded blob
+		setTimeout(() => {
+			reader.readAsDataURL(file);
+		}, 700);
 
-    } else if (!logoImage.src) {
-        // If no image is selected and no image is currently displayed, hide logo, clear source
-        logoImage.classList.add("hidden");
-        logoImage.src = ""; 
-        logoImage.style.display = "none";
+	} else if (!logoImage.src) {
+		// If no image is selected and no image is currently displayed, hide logo, clear source
+		logoImage.classList.add("hidden");
+		logoImage.src = "";
+		logoImage.style.display = "none";
 
-        // Hide the remove image button
-        const removeButton = document.querySelector(".remove-button");
-        removeButton.classList.add("hidden");
+		// Hide the remove image button
+		const removeButton = document.querySelector(".remove-button");
+		removeButton.classList.add("hidden");
 
-        // Hide loader
-        loader.style.display = "none";
+		// Hide loader
+		loader.style.display = "none";
 		spinner.style.display = "none";
-    }
+	}
 
-    const fileInput = event.target;
-    const fileNameContainer = document.getElementById("file-name");
-    // If image is selected setting image name in button
-    if (fileInput.files.length > 0) {
-        const fileName = fileInput.files[0].name;
-        fileNameContainer.textContent = fileName;
-    } else if (!logoImage.src) {
-        fileNameContainer.textContent = "Upload Logo";
-    }
+	const fileInput = event.target;
+	const fileNameContainer = document.getElementById("file-name");
+	// If image is selected setting image name in button
+	if (fileInput.files.length > 0) {
+		const fileName = fileInput.files[0].name;
+		fileNameContainer.textContent = fileName;
+	} else if (!logoImage.src) {
+		fileNameContainer.textContent = "Upload Logo";
+	}
 }
 
 function removeLogo() { //When remove logo is clicked
-    const logoImage = document.getElementById("logo-image");
-    const fileNameContainer = document.getElementById("file-name");
-    const loader = document.getElementById("loader");
-    const umbrellaImage = document.getElementById("umbrella-image");
+	const logoImage = document.getElementById("logo-image");
+	const fileNameContainer = document.getElementById("file-name");
+	const loader = document.getElementById("loader");
+	const umbrellaImage = document.getElementById("umbrella-image");
 	const uploadIcon = document.querySelector(".upload-icon");
 	const spinner = document.getElementById("spinner");
 
-    // Hide the umbrella image, logo and show the loader
-    umbrellaImage.style.display = "none";
+	// Hide the umbrella image, logo and show the loader
+	umbrellaImage.style.display = "none";
 	logoImage.style.display = "none";
 	uploadIcon.style.display = "none";
-    loader.style.display = "block";
+	loader.style.display = "block";
 	spinner.style.display = "block";
 
-    setTimeout(() => {
-        // Hiding the logo image and clearing data
-        logoImage.classList.add("hidden");
-        logoImage.src = ""; 
+	setTimeout(() => {
+		// Hiding the logo image and clearing data
+		logoImage.classList.add("hidden");
+		logoImage.src = "";
 
-        // Removing the file name
-        fileNameContainer.textContent = "Upload Logo";
+		// Removing the file name
+		fileNameContainer.textContent = "Upload Logo";
 
-        // Clearing the file input value
-        const fileInput = document.getElementById("logo-upload");
-        fileInput.value = "";
+		// Clearing the file input value
+		const fileInput = document.getElementById("logo-upload");
+		fileInput.value = "";
 
-        // Hiding the remove button
-        const removeButton = document.querySelector(".remove-button");
-        removeButton.classList.add("hidden");
+		// Hiding the remove button
+		const removeButton = document.querySelector(".remove-button");
+		removeButton.classList.add("hidden");
 
-        // Hide the loader and show the umbrella image after the timeout
-        loader.style.display = "none";
-        umbrellaImage.style.display = "block";
+		// Hide the loader and show the umbrella image after the timeout
+		loader.style.display = "none";
+		umbrellaImage.style.display = "block";
 		spinner.style.display = "none";
 		uploadIcon.style.display = "block";
-    }, 700);
+	}, 700);
 }
